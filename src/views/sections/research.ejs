@@ -1,0 +1,32 @@
+<section id="research">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// SCHOLARLY PROFILES</span>
+      <h2 class="section-title"><%= section.title || 'Research & Publications' %></h2>
+      <svg class="waveform-underline" viewBox="0 0 140 8" aria-hidden="true">
+        <path d="M 0 4 Q 17.5 0, 35 4 T 70 4 T 105 4 T 140 4" fill="none" stroke="var(--accent)" stroke-width="2" />
+      </svg>
+      <% if (section.subtitle) { %>
+        <p class="section-subtitle"><%= section.subtitle %></p>
+      <% } %>
+    </div>
+
+    <div class="research-grid">
+      <% researchProfiles.forEach(function(rp, idx) { %>
+        <a
+          href="<%= rp.profile_url %>"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="research-card reveal stagger-<%= (idx % 4) + 1 %>"
+          aria-label="Visit <%= rp.platform_name %> profile (<%= rp.display_label || 'External Link' %>)"
+        >
+          <div class="research-card-content">
+            <h3><%= rp.platform_name %></h3>
+            <p><%= rp.display_label || rp.profile_url.replace(/^https?:\/\//, '') %></p>
+          </div>
+          <div class="research-arrow" aria-hidden="true">↗</div>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>

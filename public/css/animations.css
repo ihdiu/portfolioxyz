@@ -1,0 +1,173 @@
+/* Animations: Keyframes, Scroll Reveals, Hardware-Accelerated Transforms */
+
+/* Reveal classes only hide when JS is active */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 550ms var(--ease-out), transform 550ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 80ms);
+  will-change: opacity, transform;
+}
+
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger helpers */
+.stagger-1 { --i: 1; }
+.stagger-2 { --i: 2; }
+.stagger-3 { --i: 3; }
+.stagger-4 { --i: 4; }
+.stagger-5 { --i: 5; }
+.stagger-6 { --i: 6; }
+
+/* Circuit signal pulse */
+@keyframes signalPulse {
+  0% {
+    stroke-dashoffset: 1000;
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.2;
+  }
+}
+
+.pulse-path {
+  stroke-dasharray: 200 400;
+  animation: signalPulse 6s linear infinite;
+}
+
+/* In-progress pulsating outline */
+@keyframes outlinePulse {
+  0%, 100% {
+    stroke-opacity: 1;
+    filter: drop-shadow(0 0 2px var(--accent-2));
+  }
+  50% {
+    stroke-opacity: 0.3;
+    filter: none;
+  }
+}
+
+.node-in-progress {
+  stroke: var(--accent-2) !important;
+  stroke-dasharray: 4 2;
+  animation: outlinePulse 2s ease-in-out infinite;
+}
+
+/* Responsive & Reduced Motion override */
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .pulse-path,
+  .node-in-progress,
+  .typing-cursor {
+    animation: none !important;
+  }
+}
+
+html[data-motion="off"] .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+html[data-motion="off"] .pulse-path,
+html[data-motion="off"] .node-in-progress,
+html[data-motion="off"] .typing-cursor {
+  animation: none !important;
+}
+
+/* Responsive Layout Breakpoints */
+@media (max-width: 992px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .hero-intro-label {
+    justify-content: center;
+  }
+  .hero-terminal-line {
+    justify-content: center;
+  }
+  .hero-cta-group {
+    justify-content: center;
+  }
+  .hero-meta-strip {
+    justify-content: center;
+  }
+  .hero-avatar-wrapper {
+    order: -1;
+    margin-bottom: var(--s4);
+  }
+  .hero-avatar-card {
+    width: 220px;
+    height: 220px;
+  }
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    padding: var(--s4);
+    gap: var(--s3);
+  }
+  .nav-links.is-open {
+    display: flex;
+  }
+  .nav-mobile-toggle {
+    display: block;
+  }
+  .timeline::before {
+    left: 14px;
+  }
+  .timeline-item {
+    padding-left: 42px;
+  }
+  .timeline-marker {
+    left: 6px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* --- Background Cybernetic Scenery Canvas --- */
+.bg-scenery-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+
+main#main-content {
+  position: relative;
+  z-index: 1;
+}
+
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+

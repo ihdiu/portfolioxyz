@@ -1,0 +1,59 @@
+<section id="experience">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// ENGINEERING TIMELINE</span>
+      <h2 class="section-title"><%= section.title || 'Experience & Roles' %></h2>
+      <svg class="waveform-underline" viewBox="0 0 140 8" aria-hidden="true">
+        <path d="M 0 4 Q 17.5 0, 35 4 T 70 4 T 105 4 T 140 4" fill="none" stroke="var(--accent)" stroke-width="2" />
+      </svg>
+      <% if (section.subtitle) { %>
+        <p class="section-subtitle"><%= section.subtitle %></p>
+      <% } %>
+    </div>
+
+    <div class="timeline">
+      <% experiences.forEach(function(exp, idx) { 
+           const startDateStr = exp.start_date ? new Date(exp.start_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
+           const endDateStr = exp.end_date ? new Date(exp.end_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Present';
+      %>
+        <div class="timeline-item reveal stagger-<%= (idx % 3) + 1 %>">
+          <div class="timeline-marker" aria-hidden="true"></div>
+          <div class="timeline-card">
+            <h3 class="timeline-role"><%= exp.role_title %></h3>
+            
+            <div class="timeline-org">
+              <span style="color: var(--accent);"><%- icon('briefcase', { size: 16 }) %></span>
+              <% if (exp.website) { %>
+                <a href="<%= exp.website %>" target="_blank" rel="noopener noreferrer"><%= exp.organization_name %></a>
+              <% } else { %>
+                <span><%= exp.organization_name %></span>
+              <% } %>
+              <% if (exp.location) { %>
+                <span style="color: var(--text-muted); font-size: 12px;">• <%= exp.location %></span>
+              <% } %>
+            </div>
+
+            <div class="timeline-date">
+              <span style="color: var(--text-muted); margin-right: 4px;"><%- icon('calendar', { size: 14 }) %></span>
+              <%= startDateStr %> — <%= endDateStr %>
+            </div>
+
+            <% if (exp.description) { %>
+              <div class="timeline-desc">
+                <%= exp.description %>
+              </div>
+            <% } %>
+
+            <% if (exp.skills && exp.skills.length > 0) { %>
+              <div class="tag-list" style="margin-top: 12px;">
+                <% exp.skills.forEach(function(skill) { %>
+                  <span class="tag-chip"># <%= skill.name %></span>
+                <% }); %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>

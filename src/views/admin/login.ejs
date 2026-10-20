@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Access // Admin Authentication</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 30%, #15222e 0%, #080d12 100%);
+    }
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+    .login-box {
+      background: #111a22;
+      border: 1px solid #223747;
+      border-radius: 12px;
+      padding: 36px 32px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 30px rgba(34, 211, 238, 0.05);
+    }
+    .login-logo {
+      font-family: var(--adm-font-mono);
+      color: var(--adm-primary);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .login-desc {
+      color: var(--adm-text-muted);
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <div class="login-logo" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <span style="color: var(--adm-primary); display: inline-flex;"><%- icon('cpu', { size: 20 }) %></span> MISSION CONTROL
+      </div>
+      <p class="login-desc">Enter authorized credentials to access administrative systems.</p>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-error" style="margin-bottom: 20px;">
+          <span><%= error %></span>
+        </div>
+      <% } %>
+
+      <form action="/admin/login" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div class="form-group">
+          <label class="form-label" for="email">Admin Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="admin@example.com"
+            required
+            autocomplete="email"
+            autofocus
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Security Key / Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px; padding: 12px;">
+          Authenticate Access
+        </button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

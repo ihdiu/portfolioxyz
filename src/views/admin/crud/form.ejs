@@ -1,0 +1,152 @@
+<%- include('../partials/header') %>
+
+<div style="margin-bottom: 24px;">
+  <a href="/admin/<%= config.name %>" style="color: var(--adm-text-muted); text-decoration: none; font-size: 13px; font-family: var(--adm-font-mono);">
+    ← Back to <%= config.label %>
+  </a>
+  <h1 style="font-size: 22px; font-weight: 700; font-family: var(--adm-font-mono); margin-top: 8px;">
+    <%= item && item.id ? `Edit ${config.singular || 'Item'} #${item.id}` : `Create New ${config.singular || 'Item'}` %>
+  </h1>
+</div>
+
+<div class="form-card">
+  <form action="/admin/<%= config.name %><%= item && item.id ? '/' + item.id : '' %>" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <% config.fields.forEach(function(field) { 
+         const val = item ? item[field.name] : '';
+         const error = errors ? errors[field.name] : null;
+    %>
+      <div class="form-group">
+        <label class="form-label" for="field-<%= field.name %>">
+          <%= field.label %>
+          <% if (field.required) { %><span style="color: var(--adm-danger);">*</span><% } %>
+        </label>
+
+        <% if (field.type === 'text' || field.type === 'url') { %>
+          <input
+            type="<%= field.type === 'url' ? 'url' : 'text' %>"
+            id="field-<%= field.name %>"
+            name="<%= field.name %>"
+            class="form-control"
+            value="<%= val !== undefined && val !== null ? val : '' %>"
+            <%= field.required ? 'required' : '' %>
+            <%= field.max ? `maxlength="${field.max}"` : '' %>
+          >
+
+        <% } else if (field.type === 'number') { %>
+          <input
+            type="number"
+            id="field-<%= field.name %>"
+            name="<%= field.name %>"
+            class="form-control"
+            value="<%= val !== undefined && val !== null ? val : (field.default !== undefined ? field.default : '') %>"
+            <%= field.min !== undefined ? `min="${field.min}"` : '' %>
+            <%= field.max !== undefined ? `max="${field.max}"` : '' %>
+            <%= field.required ? 'required' : '' %>
+          >
+
+        <% } else if (field.type === 'date') { %>
+          <input
+            type="date"
+            id="field-<%= field.name %>"
+            name="<%= field.name %>"
+            class="form-control"
+            value="<%= val ? (val instanceof Date ? val.toISOString().slice(0, 10) : String(val).slice(0, 10)) : '' %>"
+            <%= field.required ? 'required' : '' %>
+          >
+
+        <% } else if (field.type === 'textarea') { %>
+          <textarea
+            id="field-<%= field.name %>"
+            name="<%= field.name %>"
+            class="form-control"
+            rows="5"
+            <%= field.max ? `maxlength="${field.max}"` : '' %>
+            <%= field.required ? 'required' : '' %>
+          ><%= val || '' %></textarea>
+
+        <% } else if (field.type === 'select') { %>
+          <select
+            id="field-<%= field.name %>"
+            name="<%= field.name %>"
+            class="form-control"
+            <%= field.required ? 'required' : '' %>
+          >
+            <option value="">-- Select <%= field.label %> --</option>
+            <% if (options && options[field.name]) { %>
+              <% options[field.name].forEach(function(opt) { %>
+                <option value="<%= opt.value %>" <%= String(val) === String(opt.value) ? 'selected' : '' %>>
+                  <%= opt.label %>
+                </option>
+              <% }); %>
+            <% } %>
+          </select>
+
+        <% } else if (field.type === 'checkbox') { %>
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              id="field-<%= field.name %>"
+              name="<%= field.name %>"
+              value="1"
+              <%= val ? 'checked' : '' %>
+            >
+            <span>Enabled / Active</span>
+          </label>
+
+        <% } else if (field.type === 'multiselect') { %>
+          <div class="multiselect-box">
+            <% if (options && options[field.name]) { %>
+              <% 
+                const selectedVals = Array.isArray(val) ? val.map(String) : [];
+                options[field.name].forEach(function(opt) { 
+              %>
+                <label class="checkbox-label" style="font-size: 13px;">
+                  <input
+                    type="checkbox"
+                    name="<%= field.name %>"
+                    value="<%= opt.value %>"
+                    <%= selectedVals.includes(String(opt.value)) ? 'checked' : '' %>
+                  >
+                  <span><%= opt.label %></span>
+                </label>
+              <% }); %>
+            <% } %>
+          </div>
+
+        <% } else if (field.type === 'image') { %>
+          <% if (val) { %>
+            <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 12px;">
+              <img src="<%= val %>" alt="current" style="height: 60px; max-width: 120px; object-fit: contain; background: #000; border-radius: 4px; border: 1px solid var(--adm-border);">
+              <span class="form-text">Current file: <%= val %></span>
+            </div>
+          <% } %>
+          <input
+            type="file"
+            id="field-<%= field.name %>"
+            name="<%= field.name %>"
+            class="form-control"
+            accept="image/jpeg,image/png,image/webp"
+          >
+          <div class="form-text">Accepted: JPEG, PNG, WebP (max 5 MB). Converted to optimized WebP.</div>
+        <% } %>
+
+        <% if (error) { %>
+          <div class="form-error"><%= error %></div>
+        <% } %>
+      </div>
+    <% }); %>
+
+    <div style="display: flex; gap: 12px; margin-top: 32px;">
+      <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+        <%- icon('save', { size: 16 }) %> Save <%= config.singular || 'Item' %>
+      </button>
+      <a href="/admin/<%= config.name %>" class="btn btn-secondary">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

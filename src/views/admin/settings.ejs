@@ -1,0 +1,95 @@
+<%- include('partials/header') %>
+
+<div style="margin-bottom: 24px;">
+  <h1 style="font-size: 22px; font-weight: 700; font-family: var(--adm-font-mono);">
+    Appearance & System Settings
+  </h1>
+  <p style="color: var(--adm-text-muted); font-size: 13px;">
+    Customize the color accents, default lighting theme, motion toggles, and SEO meta tags.
+  </p>
+</div>
+
+<div class="form-card">
+  <form action="/admin/settings" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <h3 style="font-size: 16px; font-family: var(--adm-font-mono); color: var(--adm-primary); margin-bottom: 16px; border-bottom: 1px solid var(--adm-border); padding-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+      <%- icon('sparkles', { size: 16 }) %> Design Tokens & Theme
+    </h3>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div class="form-group">
+        <label class="form-label" for="accent_primary">Primary Accent (Neon Cyan)</label>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <input type="color" id="accent_primary" name="accent_primary" value="<%= settings.accent_primary || '#22d3ee' %>" style="height: 40px; width: 60px; background: none; border: 1px solid var(--adm-border); border-radius: 4px; cursor: pointer;">
+          <input type="text" class="form-control" value="<%= settings.accent_primary || '#22d3ee' %>" oninput="document.getElementById('accent_primary').value = this.value" style="font-family: var(--adm-font-mono);">
+        </div>
+        <div class="form-text">Used for circuit traces, active links, glow highlights.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="accent_secondary">Secondary Accent (Amber / Copper)</label>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <input type="color" id="accent_secondary" name="accent_secondary" value="<%= settings.accent_secondary || '#f59e0b' %>" style="height: 40px; width: 60px; background: none; border: 1px solid var(--adm-border); border-radius: 4px; cursor: pointer;">
+          <input type="text" class="form-control" value="<%= settings.accent_secondary || '#f59e0b' %>" oninput="document.getElementById('accent_secondary').value = this.value" style="font-family: var(--adm-font-mono);">
+        </div>
+        <div class="form-text">Used for hardware accents, badges, and warning states.</div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div class="form-group">
+        <label class="form-label" for="theme_default">Default Color Theme</label>
+        <select id="theme_default" name="theme_default" class="form-control">
+          <option value="dark" <%= settings.theme_default === 'dark' ? 'selected' : '' %>>Dark Mode (PCB Obsidian)</option>
+          <option value="light" <%= settings.theme_default === 'light' ? 'selected' : '' %>>Light Mode (Clean Lab)</option>
+        </select>
+        <div class="form-text">Visitors can also toggle between themes on the landing page.</div>
+      </div>
+
+      <div class="form-group" style="display: flex; flex-direction: column; justify-content: center;">
+        <label class="form-label">Motion Engine</label>
+        <label class="checkbox-label" style="margin-top: 6px;">
+          <input
+            type="checkbox"
+            name="animations_enabled"
+            value="1"
+            <%= settings.animations_enabled === '1' ? 'checked' : '' %>
+          >
+          <span>Enable circuit animations, reveals, and signal pulses</span>
+        </label>
+        <div class="form-text">Disabling turns off circuit pulses and transitions system-wide.</div>
+      </div>
+    </div>
+
+    <h3 style="font-size: 16px; font-family: var(--adm-font-mono); color: var(--adm-primary); margin: 28px 0 16px 0; border-bottom: 1px solid var(--adm-border); padding-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+      <%- icon('globe', { size: 16 }) %> SEO & Metadata
+    </h3>
+
+    <div class="form-group">
+      <label class="form-label" for="site_title">Site Title</label>
+      <input type="text" id="site_title" name="site_title" class="form-control" value="<%= settings.site_title || '' %>" required>
+      <div class="form-text">Browser tab title and Open Graph title.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="meta_description">Meta Description</label>
+      <textarea id="meta_description" name="meta_description" class="form-control" rows="3"><%= settings.meta_description || '' %></textarea>
+      <div class="form-text">Search engine description snippet (150-160 chars recommended).</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="og_image">Open Graph Social Image URL</label>
+      <input type="text" id="og_image" name="og_image" class="form-control" value="<%= settings.og_image || '' %>">
+      <div class="form-text">Image displayed when sharing links on LinkedIn, Twitter, Discord.</div>
+    </div>
+
+    <div style="margin-top: 32px;">
+      <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+        <%- icon('save', { size: 16 }) %> Save System Settings
+      </button>
+    </div>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

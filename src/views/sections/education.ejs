@@ -1,0 +1,58 @@
+<section id="education">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// ACADEMIC FOUNDATION</span>
+      <h2 class="section-title"><%= section.title || 'Education & Honors' %></h2>
+      <svg class="waveform-underline" viewBox="0 0 140 8" aria-hidden="true">
+        <path d="M 0 4 Q 17.5 0, 35 4 T 70 4 T 105 4 T 140 4" fill="none" stroke="var(--accent)" stroke-width="2" />
+      </svg>
+      <% if (section.subtitle) { %>
+        <p class="section-subtitle"><%= section.subtitle %></p>
+      <% } %>
+    </div>
+
+    <div class="timeline">
+      <% educations.forEach(function(edu, idx) { 
+           const startDateStr = edu.start_date ? new Date(edu.start_date).getFullYear() : '';
+           const endDateStr = edu.end_date ? new Date(edu.end_date).getFullYear() : 'Present';
+      %>
+        <div class="timeline-item reveal stagger-<%= (idx % 3) + 1 %>">
+          <div class="timeline-marker" style="border-color: var(--accent-2); box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);" aria-hidden="true"></div>
+          <div class="timeline-card">
+            <h3 class="timeline-role"><%= edu.degree %></h3>
+            
+            <% if (edu.field_of_study) { %>
+              <div style="font-family: var(--font-mono); font-size: 14px; color: var(--accent-2); margin-bottom: 6px;">
+                Specialization: <%= edu.field_of_study %>
+              </div>
+            <% } %>
+
+            <div class="timeline-org">
+              <%- icon('graduation-cap', { size: 16 }) %>
+              <% if (edu.website) { %>
+                <a href="<%= edu.website %>" target="_blank" rel="noopener noreferrer"><%= edu.organization_name %></a>
+              <% } else { %>
+                <span><%= edu.organization_name %></span>
+              <% } %>
+            </div>
+
+            <div class="timeline-date">
+              <%- icon('calendar', { size: 14 }) %> <%= startDateStr %> — <%= endDateStr %>
+              <% if (edu.grade) { %>
+                <span class="tag-chip" style="margin-left: 8px; color: var(--accent); border-color: var(--accent);">
+                  <%= edu.grade %>
+                </span>
+              <% } %>
+            </div>
+
+            <% if (edu.description) { %>
+              <div class="timeline-desc">
+                <%= edu.description %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>

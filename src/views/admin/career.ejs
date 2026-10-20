@@ -1,0 +1,157 @@
+<%- include('partials/header') %>
+
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+  <div>
+    <h1 style="font-size: 22px; font-weight: 700; font-family: var(--adm-font-mono);">
+      Career Trajectory Graph / Tree Editor
+    </h1>
+    <p style="color: var(--adm-text-muted); font-size: 13px;">
+      Adjacency list tree defining your career roadmap. Automatic cycle prevention stops invalid loops.
+    </p>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; align-items: start;">
+  <!-- Tree Hierarchy List -->
+  <div class="table-card" style="padding: 20px;">
+    <h3 style="font-size: 15px; font-family: var(--adm-font-mono); color: var(--adm-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+      <%- icon('git-branch', { size: 16 }) %> Active Career Node Hierarchy
+    </h3>
+
+    <% if (!nodes || nodes.length === 0) { %>
+      <p style="color: var(--adm-text-muted); font-size: 14px;">No nodes configured. Add one using the form.</p>
+    <% } else { %>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <% nodes.forEach(function(node) { %>
+          <div class="tree-node-item" style="margin-left: <%= (node.depth || 0) * 24 %>px;">
+            <div class="tree-node-content">
+              <span class="tree-node-indent">
+                <% if ((node.depth || 0) > 0) { %>└── <% } else { %>● <% } %>
+              </span>
+              <div>
+                <strong style="font-size: 14px;"><%= node.title %></strong>
+                <% if (node.target_year) { %>
+                  <span style="font-family: var(--adm-font-mono); font-size: 12px; color: var(--adm-text-muted); margin-left: 6px;">
+                    [<%= node.target_year %>]
+                  </span>
+                <% } %>
+                <div style="margin-top: 4px;">
+                  <span class="badge <%= node.status === 'done' ? 'badge-success' : (node.status === 'in_progress' ? 'badge-warning' : 'badge-muted') %>">
+                    <%= node.status %>
+                  </span>
+                  <% if (node.description) { %>
+                    <span style="font-size: 12px; color: var(--adm-text-muted); margin-left: 8px;">
+                      <%= node.description.slice(0, 45) %><%= node.description.length > 45 ? '...' : '' %>
+                    </span>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                onclick="editNode(<%= JSON.stringify(node) %>)"
+              >
+                Edit
+              </button>
+              <form action="/admin/career/<%= node.id %>/delete" method="POST" style="margin: 0;" onsubmit="return confirm('Delete node & its children?');">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Add / Edit Form -->
+  <div class="form-card" style="width: 100%;">
+    <h3 id="form-heading" style="font-size: 15px; font-family: var(--adm-font-mono); color: var(--adm-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+      <%- icon('plus', { size: 16 }) %> Add New Career Node
+    </h3>
+
+    <form id="career-form" action="/admin/career" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="form-group">
+        <label class="form-label" for="node-title">Node Title <span style="color:var(--adm-danger)">*</span></label>
+        <input type="text" id="node-title" name="title" class="form-control" placeholder="e.g. Embedded Firmware Lead" required maxlength="120">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="node-parent">Parent Node (Root if None)</label>
+        <select id="node-parent" name="parent_id" class="form-control">
+          <option value="">-- [Root Node / No Parent] --</option>
+          <% allNodes.forEach(function(n) { %>
+            <option value="<%= n.id %>">#<%= n.id %> - <%= n.title %></option>
+          <% }); %>
+        </select>
+        <div class="form-text">Cycle detection automatically blocks assigning a node or its children as parent.</div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <div class="form-group">
+          <label class="form-label" for="node-status">Status</label>
+          <select id="node-status" name="status" class="form-control">
+            <option value="planned">Planned (Dashed)</option>
+            <option value="in_progress">In Progress (Pulsing)</option>
+            <option value="done">Completed (Solid Neon)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="node-year">Target Year</label>
+          <input type="number" id="node-year" name="target_year" class="form-control" placeholder="2026" min="2000" max="2100">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="node-desc">Description</label>
+        <textarea id="node-desc" name="description" class="form-control" rows="3" placeholder="Brief technical milestone scope..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="node-sort">Sort Order</label>
+        <input type="number" id="node-sort" name="sort_order" class="form-control" value="0">
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 24px;">
+        <button type="submit" id="submit-btn" class="btn btn-primary" style="flex: 1;">
+          Add Node
+        </button>
+        <button type="button" id="cancel-btn" class="btn btn-secondary" style="display: none;" onclick="resetForm()">
+          Cancel Edit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function editNode(node) {
+    document.getElementById('form-heading').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-edit"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Edit Node #' + node.id + ': ' + node.title;
+    document.getElementById('career-form').action = '/admin/career/' + node.id;
+    document.getElementById('node-title').value = node.title || '';
+    document.getElementById('node-parent').value = node.parent_id || '';
+    document.getElementById('node-status').value = node.status || 'planned';
+    document.getElementById('node-year').value = node.target_year || '';
+    document.getElementById('node-desc').value = node.description || '';
+    document.getElementById('node-sort').value = node.sort_order || 0;
+    document.getElementById('submit-btn').innerText = 'Save Node Changes';
+    document.getElementById('cancel-btn').style.display = 'inline-flex';
+    document.getElementById('career-form').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function resetForm() {
+    document.getElementById('form-heading').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-plus"><path d="M5 12h14M12 5v14"/></svg> Add New Career Node';
+    document.getElementById('career-form').action = '/admin/career';
+    document.getElementById('career-form').reset();
+    document.getElementById('submit-btn').innerText = 'Add Node';
+    document.getElementById('cancel-btn').style.display = 'none';
+  }
+</script>
+
+<%- include('partials/footer') %>

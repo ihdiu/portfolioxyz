@@ -1,0 +1,142 @@
+<section id="projects">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// SELECTED WORKS</span>
+      <h2 class="section-title"><%= section.title || 'Engineering Projects' %></h2>
+      <svg class="waveform-underline" viewBox="0 0 140 8" aria-hidden="true">
+        <path d="M 0 4 Q 17.5 0, 35 4 T 70 4 T 105 4 T 140 4" fill="none" stroke="var(--accent)" stroke-width="2" />
+      </svg>
+      <% if (section.subtitle) { %>
+        <p class="section-subtitle"><%= section.subtitle %></p>
+      <% } %>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="project-filters reveal">
+      <button class="filter-btn active" data-filter="all" type="button">All Disciplines</button>
+      <button class="filter-btn" data-filter="cs" type="button">Computer Science</button>
+      <button class="filter-btn" data-filter="electronics" type="button">Electronics</button>
+    </div>
+
+    <!-- Project Cards Grid -->
+    <div class="projects-grid">
+      <% projects.forEach(function(proj, idx) { %>
+        <article
+          class="project-card reveal stagger-<%= (idx % 3) + 1 %>"
+          data-project-id="<%= proj.id %>"
+          data-domain="<%= proj.domain_slug %>"
+          tabindex="0"
+          role="button"
+          aria-haspopup="dialog"
+          aria-label="View details for <%= proj.title %>"
+        >
+          <div class="project-cover-wrap">
+            <% if (proj.cover_path) { %>
+              <img
+                src="<%= proj.cover_path %>"
+                alt="<%= proj.title %> preview"
+                class="project-cover-img"
+                loading="lazy"
+                width="380"
+                height="200"
+              >
+            <% } else { %>
+              <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: var(--accent);">
+                <%- icon('cpu', { size: 40 }) %>
+              </div>
+            <% } %>
+            <div class="project-domain-badge">
+              <%= proj.domain_slug %>
+            </div>
+          </div>
+
+          <div class="project-card-body">
+            <h3 class="project-title"><%= proj.title %></h3>
+            <p class="project-summary"><%= proj.summary %></p>
+
+            <% if (proj.skills && proj.skills.length > 0) { %>
+              <div class="tag-list" style="margin-top: auto;">
+                <% proj.skills.slice(0, 4).forEach(function(skill) { %>
+                  <span class="tag-chip"># <%= skill.name %></span>
+                <% }); %>
+                <% if (proj.skills.length > 4) { %>
+                  <span class="tag-chip">+<%= proj.skills.length - 4 %></span>
+                <% } %>
+              </div>
+            <% } %>
+          </div>
+        </article>
+
+        <!-- Hidden Server-Rendered Modal Template (No API calls required) -->
+        <template id="project-modal-<%= proj.id %>" data-slug="<%= proj.slug %>">
+          <div class="modal-header">
+            <div>
+              <span class="project-domain-badge" style="position: static; margin-bottom: 6px; display: inline-block;">
+                <%= proj.domain_name %>
+              </span>
+              <h2 style="font-size: 20px; font-weight: 700;"><%= proj.title %></h2>
+            </div>
+            <button type="button" class="modal-close-btn" aria-label="Close project modal"><%- icon('x', { size: 18 }) %></button>
+          </div>
+
+          <div class="modal-body">
+            <% if (proj.cover_path) { %>
+              <img
+                src="<%= proj.cover_path %>"
+                alt="<%= proj.title %> high resolution cover"
+                style="width: 100%; max-height: 360px; object-fit: cover; border-radius: var(--radius-sm); margin-bottom: 20px; border: 1px solid var(--border);"
+              >
+            <% } %>
+
+            <div class="modal-desc"><%= proj.description || proj.summary %></div>
+
+            <% if (proj.images && proj.images.length > 0) { %>
+              <div style="margin-top: 24px; margin-bottom: 24px;">
+                <h4 style="font-family: var(--font-mono); font-size: 14px; color: var(--accent); margin-bottom: 12px;">Gallery & Schematics</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
+                  <% proj.images.forEach(function(img) { %>
+                    <div style="border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden;">
+                      <img src="<%= img.image_path %>" alt="<%= img.caption || 'Project visual' %>" style="width: 100%; height: 110px; object-fit: cover;">
+                      <% if (img.caption) { %>
+                        <div style="font-size: 11px; padding: 4px 6px; background: var(--surface-2); color: var(--text-muted);"><%= img.caption %></div>
+                      <% } %>
+                    </div>
+                  <% }); %>
+                </div>
+              </div>
+            <% } %>
+
+            <% if (proj.skills && proj.skills.length > 0) { %>
+              <div style="margin-top: 16px;">
+                <h4 style="font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Technologies & Stack:</h4>
+                <div class="tag-list">
+                  <% proj.skills.forEach(function(skill) { %>
+                    <span class="tag-chip" style="color: var(--accent);"># <%= skill.name %></span>
+                  <% }); %>
+                </div>
+              </div>
+            <% } %>
+
+            <div class="modal-actions">
+              <% if (proj.demo_url) { %>
+                <a href="<%= proj.demo_url %>" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+                  <%- icon('external-link', { size: 16 }) %> Live Interactive Demo
+                </a>
+              <% } %>
+              <% if (proj.repo_url) { %>
+                <a href="<%= proj.repo_url %>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
+                  <%- icon('code', { size: 16 }) %> Source Repository
+                </a>
+              <% } %>
+            </div>
+          </div>
+        </template>
+      <% }); %>
+    </div>
+  </div>
+
+  <!-- Native HTML5 <dialog> for Project Modal -->
+  <dialog id="project-modal" class="project-modal" aria-labelledby="modal-title">
+    <div id="project-modal-content"></div>
+  </dialog>
+</section>

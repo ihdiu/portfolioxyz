@@ -1,0 +1,77 @@
+<%- include('../partials/header') %>
+
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+  <div>
+    <h1 style="font-size: 22px; font-weight: 700; font-family: var(--adm-font-mono);">
+      <%= config.label %>
+    </h1>
+    <p style="color: var(--adm-text-muted); font-size: 13px;">
+      Manage all registered <%= config.label.toLowerCase() %>.
+    </p>
+  </div>
+  <a href="/admin/<%= config.name %>/new" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+    <%- icon('plus', { size: 14 }) %> New <%= config.singular || 'Item' %>
+  </a>
+</div>
+
+<div class="table-card">
+  <div class="table-responsive">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <% config.listColumns.forEach(function(col) { %>
+            <th><%= typeof col === 'object' ? col.label : col %></th>
+          <% }); %>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (!items || items.length === 0) { %>
+          <tr>
+            <td colspan="<%= config.listColumns.length + 1 %>" style="text-align: center; color: var(--adm-text-muted); padding: 32px;">
+              No entries found. Click "+ New <%= config.singular || 'Item' %>" to add one.
+            </td>
+          </tr>
+        <% } else { %>
+          <% items.forEach(function(item) { %>
+            <tr>
+              <% config.listColumns.forEach(function(col) { 
+                   const colKey = typeof col === 'object' ? col.key : col;
+                   let val = item[colKey];
+              %>
+                <td>
+                  <% if (colKey === 'is_featured') { %>
+                    <span class="badge <%= val ? 'badge-success' : 'badge-muted' %>">
+                      <%= val ? 'Featured' : 'Standard' %>
+                    </span>
+                  <% } else if (colKey === 'cover_path' || colKey === 'logo_path') { %>
+                    <% if (val) { %>
+                      <img src="<%= val %>" alt="preview" style="height: 32px; width: 32px; object-fit: cover; border-radius: 4px; border: 1px solid var(--adm-border);">
+                    <% } else { %>
+                      <span style="color: var(--adm-text-muted);">-</span>
+                    <% } %>
+                  <% } else if (val === null || val === undefined) { %>
+                    <span style="color: var(--adm-text-muted);">-</span>
+                  <% } else { %>
+                    <%= String(val).length > 60 ? String(val).slice(0, 57) + '...' : val %>
+                  <% } %>
+                </td>
+              <% }); %>
+              <td style="text-align: right; white-space: nowrap;">
+                <a href="/admin/<%= config.name %>/<%= item.id %>/edit" class="btn btn-secondary btn-sm" style="margin-right: 6px;">
+                  Edit
+                </a>
+                <form action="/admin/<%= config.name %>/<%= item.id %>/delete" method="POST" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this <%= config.singular || 'item' %>?');">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

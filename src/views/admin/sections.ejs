@@ -1,0 +1,87 @@
+<%- include('partials/header') %>
+
+<div style="margin-bottom: 24px;">
+  <h1 style="font-size: 22px; font-weight: 700; font-family: var(--adm-font-mono);">
+    Landing Page Sections Manager
+  </h1>
+  <p style="color: var(--adm-text-muted); font-size: 13px;">
+    Control the display sequence, visibility, titles, and subheadings of sections rendered on the landing page.
+  </p>
+</div>
+
+<div class="table-card">
+  <div class="table-responsive">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th style="width: 70px;">Order</th>
+          <th>Section</th>
+          <th>Title & Subtitle</th>
+          <th>Visibility</th>
+          <th>Reorder</th>
+          <th style="text-align: right;">Settings</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% sections.forEach(function(sec, idx) { %>
+          <tr>
+            <td style="font-family: var(--adm-font-mono); font-weight: 700; color: var(--adm-primary);">
+              #<%= sec.sort_order %>
+            </td>
+            <td>
+              <strong style="font-family: var(--adm-font-mono); font-size: 14px;"><%= sec.slug %></strong>
+            </td>
+            <td>
+              <form action="/admin/sections/<%= sec.id %>" method="POST" style="display: flex; gap: 8px; align-items: center;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="sort_order" value="<%= sec.sort_order %>">
+                <input type="hidden" name="is_visible" value="<%= sec.is_visible ? '1' : '0' %>">
+                <div style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+                  <input type="text" name="title" value="<%= sec.title %>" class="form-control" style="padding: 4px 8px; font-size: 13px;" placeholder="Title">
+                  <input type="text" name="subtitle" value="<%= sec.subtitle || '' %>" class="form-control" style="padding: 4px 8px; font-size: 12px; color: var(--adm-text-muted);" placeholder="Subtitle">
+                </div>
+                <button type="submit" class="btn btn-secondary btn-sm" title="Save Title & Subtitle">
+                  <%- icon('save', { size: 14 }) %>
+                </button>
+              </form>
+            </td>
+            <td>
+              <form action="/admin/sections/<%= sec.id %>/toggle" method="POST" style="margin: 0;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn btn-sm <%= sec.is_visible ? 'btn-primary' : 'btn-secondary' %>" style="display: inline-flex; align-items: center; gap: 6px;">
+                  <%- icon(sec.is_visible ? 'eye' : 'eye-off', { size: 14 }) %>
+                  <%= sec.is_visible ? 'Visible' : 'Hidden' %>
+                </button>
+              </form>
+            </td>
+            <td>
+              <div style="display: flex; gap: 4px;">
+                <% if (idx > 0) { %>
+                  <form action="/admin/sections/<%= sec.id %>/move-up" method="POST" style="margin: 0;">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="submit" class="btn btn-secondary btn-sm" title="Move Up">
+                      <%- icon('chevron-up', { size: 14 }) %>
+                    </button>
+                  </form>
+                <% } %>
+                <% if (idx < sections.length - 1) { %>
+                  <form action="/admin/sections/<%= sec.id %>/move-down" method="POST" style="margin: 0;">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="submit" class="btn btn-secondary btn-sm" title="Move Down">
+                      <%- icon('chevron-down', { size: 14 }) %>
+                    </button>
+                  </form>
+                <% } %>
+              </div>
+            </td>
+            <td style="text-align: right; color: var(--adm-text-muted); font-size: 12px; font-family: var(--adm-font-mono);">
+              id="#<%= sec.slug %>"
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

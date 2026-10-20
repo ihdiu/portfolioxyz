@@ -1,0 +1,108 @@
+<section id="contact">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// SIGNAL TRANSMISSION</span>
+      <h2 class="section-title"><%= section.title || 'Initiate Transmission' %></h2>
+      <svg class="waveform-underline" viewBox="0 0 140 8" aria-hidden="true">
+        <path d="M 0 4 Q 17.5 0, 35 4 T 70 4 T 105 4 T 140 4" fill="none" stroke="var(--accent)" stroke-width="2" />
+      </svg>
+      <% if (section.subtitle) { %>
+        <p class="section-subtitle"><%= section.subtitle %></p>
+      <% } %>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Contact Info Card -->
+      <div class="contact-info-card reveal stagger-1">
+        <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--accent);">
+          Direct Frequency
+        </h3>
+        <p style="color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 24px;">
+          Whether you want to discuss embedded firmware architecture, custom hardware layout, full-stack telemetry, or scholarly collaboration—transmit a signal below.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 18px; font-family: var(--font-mono); font-size: 14px;">
+          <% if (profile.email) { %>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="display: flex; align-items: center; color: var(--accent);"><%- icon('mail', { size: 18 }) %></span>
+              <div>
+                <div style="color: var(--text-muted); font-size: 11px;">ELECTRONIC MAIL</div>
+                <a href="mailto:<%= profile.email %>" style="color: var(--text);"><%= profile.email %></a>
+              </div>
+            </div>
+          <% } %>
+
+          <% if (profile.location) { %>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="display: flex; align-items: center; color: var(--accent-2);"><%- icon('map-pin', { size: 18 }) %></span>
+              <div>
+                <div style="color: var(--text-muted); font-size: 11px;">BASE STATION COORDINATES</div>
+                <span><%= profile.location %></span>
+              </div>
+            </div>
+          <% } %>
+
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span class="status-indicator" style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--success); box-shadow: 0 0 8px var(--success); margin: 4px;" aria-hidden="true"></span>
+            <div>
+              <div style="color: var(--text-muted); font-size: 11px;">OPERATIONAL STATUS</div>
+              <span style="color: var(--success);">Available for Select Projects</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Transmission Form -->
+      <div class="contact-form-card reveal stagger-2">
+        <div id="contact-status" style="display: none;" aria-live="polite"></div>
+
+        <form id="contact-form" action="/contact" method="POST" data-csrf="<%= csrfToken %>">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <input type="hidden" name="form_time" value="<%= formTimestamp %>">
+          <input type="hidden" name="form_sig" value="<%= formSignature %>">
+
+          <!-- Honeypot (bot trap, invisible to humans) -->
+          <div style="display: none !important;" aria-hidden="true">
+            <label for="hp_field">Leave this empty</label>
+            <input type="text" id="hp_field" name="hp_field" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+            <div>
+              <label for="name" class="form-label" style="font-size: 12px;">Sender Name *</label>
+              <input type="text" id="name" name="name" class="input-field" placeholder="Dr. Alan Turing" required maxlength="120">
+              <div id="error-name" class="field-error-msg" style="display: none;"></div>
+            </div>
+            <div>
+              <label for="email" class="form-label" style="font-size: 12px;">Sender Email *</label>
+              <input type="email" id="email" name="email" class="input-field" placeholder="alan@example.edu" required maxlength="190">
+              <div id="error-email" class="field-error-msg" style="display: none;"></div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <label for="subject" class="form-label" style="font-size: 12px;">Transmission Subject</label>
+            <input type="text" id="subject" name="subject" class="input-field" placeholder="Embedded Telemetry Consultation" maxlength="190">
+            <div id="error-subject" class="field-error-msg" style="display: none;"></div>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label for="message" class="form-label" style="font-size: 12px;">Payload Message *</label>
+            <textarea id="message" name="message" class="input-field" rows="5" placeholder="Enter message payload (minimum 10 characters)..." required minlength="10" maxlength="5000"></textarea>
+            <div id="error-message" class="field-error-msg" style="display: none;"></div>
+          </div>
+
+          <% if (config.TURNSTILE_SITE_KEY) { %>
+            <div style="margin-bottom: 16px;">
+              <div class="cf-turnstile" data-sitekey="<%= config.TURNSTILE_SITE_KEY %>"></div>
+            </div>
+          <% } %>
+
+          <button type="submit" id="contact-submit-btn" class="btn btn-primary" style="width: 100%; padding: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+            <%- icon('send', { size: 16 }) %> Transmit Signal Payload
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

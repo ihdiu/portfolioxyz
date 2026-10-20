@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 // Signal Lost</title>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 24px;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+    .error-box {
+      max-width: 500px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 32px;
+    }
+    .code {
+      font-family: var(--font-mono);
+      font-size: 72px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-box">
+    <div class="code">404</div>
+    <h1 style="font-family: var(--font-mono); font-size: 20px; margin-bottom: 12px;">SIGNAL LOST // ROUTE NOT FOUND</h1>
+    <p>The requested coordinate does not exist or has been disconnected from the telemetry bus.</p>
+    <a href="/" class="btn btn-primary" style="display: inline-block; padding: 10px 20px; background: var(--accent); color: #000; border-radius: 6px; text-decoration: none; font-weight: 600;">
+      Return to Landing Node
+    </a>
+  </div>
+</body>
+</html>

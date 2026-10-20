@@ -1,0 +1,47 @@
+<section id="career">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// TRAJECTORY GRAPH</span>
+      <h2 class="section-title"><%= section.title || 'Career Path & Milestones' %></h2>
+      <svg class="waveform-underline" viewBox="0 0 140 8" aria-hidden="true">
+        <path d="M 0 4 Q 17.5 0, 35 4 T 70 4 T 105 4 T 140 4" fill="none" stroke="var(--accent)" stroke-width="2" />
+      </svg>
+      <% if (section.subtitle) { %>
+        <p class="section-subtitle"><%= section.subtitle %></p>
+      <% } %>
+    </div>
+
+    <!-- Status Legend -->
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 24px; margin-bottom: 28px; font-family: var(--font-mono); font-size: 12px;" class="reveal">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent);"></span>
+        <span style="color: var(--text); font-weight: 600;">Achieved Milestone</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 8px var(--accent-2);"></span>
+        <span style="color: var(--text); font-weight: 600;">Active Focus</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: transparent; border: 1.5px dashed var(--text-muted);"></span>
+        <span style="color: var(--text-muted);">Future Roadmap</span>
+      </div>
+    </div>
+
+    <!-- Career Tree SVG Container -->
+    <div class="career-tree-container reveal" id="career-tree-wrap">
+      <div id="career-tree-render"></div>
+      <div id="career-tooltip" class="career-tooltip" role="tooltip" aria-hidden="true"></div>
+
+      <!-- No-JS Accessible Fallback -->
+      <noscript>
+        <div style="padding: 16px;">
+          <h4 style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 12px;">Roadmap Hierarchy:</h4>
+          <%- careerNoscriptHtml %>
+        </div>
+      </noscript>
+    </div>
+
+    <!-- Embedded Nested Tree JSON -->
+    <script type="application/json" id="career-data"><%- careerTreeJson %></script>
+  </div>
+</section>

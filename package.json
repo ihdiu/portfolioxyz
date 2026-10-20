@@ -1,0 +1,48 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "> **How to use this file:** This is a build specification for an AI coding agent (Claude Code or a generative IDE). Read the whole file first, then execute the phases in order. After each phase, run the acceptance checks listed for it before moving on. Do not add features that are not listed here. Keep the project small and simple.",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "migrate": "node database/migrate.js",
+    "create-admin": "node scripts/create-admin.js",
+    "test": "node --test --test-force-exit test/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ihdiu/portfolioxyz.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ihdiu/portfolioxyz/issues"
+  },
+  "homepage": "https://github.com/ihdiu/portfolioxyz#readme",
+  "dependencies": {
+    "argon2": "^0.45.1",
+    "compression": "^1.8.2",
+    "cookie-parser": "^1.4.7",
+    "csrf-csrf": "^4.0.3",
+    "dotenv": "^18.0.8",
+    "ejs": "^7.0.2",
+    "express": "^4.22.3",
+    "express-mysql-session": "^3.0.3",
+    "express-rate-limit": "^8.7.1",
+    "express-session": "^1.19.0",
+    "helmet": "^8.3.0",
+    "morgan": "^1.12.1",
+    "multer": "^2.4.0",
+    "mysql2": "^3.24.6",
+    "nodemailer": "^10.1.7",
+    "sharp": "^0.35.5",
+    "slugify": "^1.6.9",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.1"
+  }
+}

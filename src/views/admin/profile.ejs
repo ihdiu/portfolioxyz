@@ -1,0 +1,84 @@
+<%- include('partials/header') %>
+
+<div style="margin-bottom: 24px;">
+  <h1 style="font-size: 22px; font-weight: 700; font-family: var(--adm-font-mono);">
+    Profile & Identity
+  </h1>
+  <p style="color: var(--adm-text-muted); font-size: 13px;">
+    Update personal identity, terminal typing roles, avatar photo, and downloadable CV/Resume.
+  </p>
+</div>
+
+<div class="form-card">
+  <form action="/admin/profile" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="form-group">
+      <label class="form-label" for="full_name">Full Name <span style="color:var(--adm-danger)">*</span></label>
+      <input type="text" id="full_name" name="full_name" class="form-control" value="<%= profile.full_name || '' %>" required maxlength="120">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="headline">Headline</label>
+      <input type="text" id="headline" name="headline" class="form-control" value="<%= profile.headline || '' %>" maxlength="190">
+      <div class="form-text">Displayed prominently below your name in the hero section.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="typed_roles">Terminal Typed Roles (Comma-separated)</label>
+      <input type="text" id="typed_roles" name="typed_roles" class="form-control" value="<%= profile.typed_roles || '' %>" maxlength="300">
+      <div class="form-text">Example: Embedded Systems Engineer, IoT Architect, Full-Stack Developer</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="bio">Biography</label>
+      <textarea id="bio" name="bio" class="form-control" rows="5"><%= profile.bio || '' %></textarea>
+      <div class="form-text">Short introductory narrative for the hero section.</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div class="form-group">
+        <label class="form-label" for="email">Public Contact Email</label>
+        <input type="email" id="email" name="email" class="form-control" value="<%= profile.email || '' %>" maxlength="190">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="location">Location</label>
+        <input type="text" id="location" name="location" class="form-control" value="<%= profile.location || '' %>" maxlength="120">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="avatar">Avatar Image</label>
+      <% if (profile.avatar_path) { %>
+        <div style="margin-bottom: 10px; display: flex; align-items: center; gap: 12px;">
+          <img src="<%= profile.avatar_path %>" alt="avatar" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid var(--adm-primary);">
+          <span class="form-text">Active avatar: <%= profile.avatar_path %></span>
+        </div>
+      <% } %>
+      <input type="file" id="avatar" name="avatar" class="form-control" accept="image/jpeg,image/png,image/webp">
+      <div class="form-text">Upload JPEG, PNG, or WebP. Automatically cropped and converted to WebP.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="resume_file">Curriculum Vitae / Resume (PDF)</label>
+      <% if (profile.resume_path) { %>
+        <div style="margin-bottom: 10px; font-size: 13px;">
+          <span style="color: var(--adm-text-muted);">Current resume:</span>
+          <a href="<%= profile.resume_path %>" target="_blank" style="color: var(--adm-primary); margin-left: 6px;">
+            Download Active PDF ↗
+          </a>
+        </div>
+      <% } %>
+      <input type="file" id="resume_file" name="resume_file" class="form-control" accept="application/pdf">
+      <div class="form-text">PDF only (max 5 MB). Linked from the "Download Resume" hero button.</div>
+    </div>
+
+    <div style="margin-top: 28px;">
+      <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+        <%- icon('save', { size: 16 }) %> Save Profile Changes
+      </button>
+    </div>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

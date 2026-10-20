@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Admin Panel' %> // Portfolio System</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2322d3ee'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+</head>
+<body>
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <h2><span style="color:var(--adm-primary); display:inline-flex; align-items:center;"><%- icon('cpu', { size: 18 }) %></span> MISSION CONTROL</h2>
+    </div>
+    
+    <nav class="admin-sidebar-nav">
+      <a href="/admin" class="admin-nav-link <%= currentUrl === '/admin' ? 'active' : '' %>">
+        <span><%- icon('dashboard', { size: 16 }) %> Dashboard</span>
+      </a>
+
+      <div class="nav-section-title">Site Architecture</div>
+      <a href="/admin/profile" class="admin-nav-link <%= currentUrl.startsWith('/admin/profile') ? 'active' : '' %>">
+        <span><%- icon('user', { size: 16 }) %> Profile & Bio</span>
+      </a>
+      <a href="/admin/sections" class="admin-nav-link <%= currentUrl.startsWith('/admin/sections') ? 'active' : '' %>">
+        <span><%- icon('sliders', { size: 16 }) %> Section Manager</span>
+      </a>
+      <a href="/admin/settings" class="admin-nav-link <%= currentUrl.startsWith('/admin/settings') ? 'active' : '' %>">
+        <span><%- icon('sparkles', { size: 16 }) %> Appearance & SEO</span>
+      </a>
+      <a href="/admin/career" class="admin-nav-link <%= currentUrl.startsWith('/admin/career') ? 'active' : '' %>">
+        <span><%- icon('git-branch', { size: 16 }) %> Career Tree</span>
+      </a>
+      <a href="/admin/messages" class="admin-nav-link <%= currentUrl.startsWith('/admin/messages') ? 'active' : '' %>">
+        <span><%- icon('inbox', { size: 16 }) %> Inbox Transmissions</span>
+      </a>
+
+      <div class="nav-section-title">Aggregates & Content</div>
+      <a href="/admin/projects" class="admin-nav-link <%= currentUrl.startsWith('/admin/projects') ? 'active' : '' %>">
+        <span><%- icon('rocket', { size: 16 }) %> Projects</span>
+      </a>
+      <a href="/admin/skills" class="admin-nav-link <%= currentUrl.startsWith('/admin/skills') ? 'active' : '' %>">
+        <span><%- icon('zap', { size: 16 }) %> Skills</span>
+      </a>
+      <a href="/admin/skill-categories" class="admin-nav-link <%= currentUrl.startsWith('/admin/skill-categories') ? 'active' : '' %>">
+        <span><%- icon('folder', { size: 16 }) %> Skill Categories</span>
+      </a>
+      <a href="/admin/domains" class="admin-nav-link <%= currentUrl.startsWith('/admin/domains') ? 'active' : '' %>">
+        <span><%- icon('globe', { size: 16 }) %> Domains</span>
+      </a>
+      <a href="/admin/experiences" class="admin-nav-link <%= currentUrl.startsWith('/admin/experiences') ? 'active' : '' %>">
+        <span><%- icon('briefcase', { size: 16 }) %> Experiences</span>
+      </a>
+      <a href="/admin/educations" class="admin-nav-link <%= currentUrl.startsWith('/admin/educations') ? 'active' : '' %>">
+        <span><%- icon('graduation-cap', { size: 16 }) %> Education</span>
+      </a>
+      <a href="/admin/organizations" class="admin-nav-link <%= currentUrl.startsWith('/admin/organizations') ? 'active' : '' %>">
+        <span><%- icon('building', { size: 16 }) %> Organizations</span>
+      </a>
+      <a href="/admin/research-profiles" class="admin-nav-link <%= currentUrl.startsWith('/admin/research-profiles') ? 'active' : '' %>">
+        <span><%- icon('flask', { size: 16 }) %> Research Profiles</span>
+      </a>
+      <a href="/admin/research-platforms" class="admin-nav-link <%= currentUrl.startsWith('/admin/research-platforms') ? 'active' : '' %>">
+        <span><%- icon('book', { size: 16 }) %> Research Platforms</span>
+      </a>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <a href="/admin/backup" class="btn btn-secondary btn-sm" style="width: 100%;">
+        <%- icon('save', { size: 14 }) %> Backup Database (.sql)
+      </a>
+      <a href="/" target="_blank" class="btn btn-secondary btn-sm" style="width: 100%;">
+        <%- icon('external-link', { size: 14 }) %> Open Landing Page ↗
+      </a>
+      <form action="/admin/logout" method="POST" style="margin: 0;">
+        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+        <button type="submit" class="btn btn-danger btn-sm" style="width: 100%;">
+          <%- icon('log-out', { size: 14 }) %> Terminate Session
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="admin-topbar-title">
+        <%= typeof title !== 'undefined' ? title : 'Administration' %>
+      </div>
+      <div style="font-size: 13px; font-family: var(--adm-font-mono); color: var(--adm-text-muted);">
+        Connected: <strong style="color: var(--adm-primary);"><%= adminUser ? adminUser.email : 'Admin' %></strong>
+      </div>
+    </header>
+
+    <main class="admin-content">
+      <% if (typeof flash !== 'undefined' && flash) { %>
+        <div class="alert alert-<%= flash.type === 'error' ? 'error' : 'success' %>">
+          <span><%= flash.message %></span>
+        </div>
+      <% } %>
+
+      <%- body %>
+    </main>
+  </div>
+</body>
+</html>

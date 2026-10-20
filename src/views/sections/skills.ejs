@@ -1,0 +1,81 @@
+<section id="skills">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// SKILLS & CAPABILITIES</span>
+      <h2 class="section-title"><%= section.title || 'Technical Disciplines' %></h2>
+      <svg class="waveform-underline" viewBox="0 0 140 8" aria-hidden="true">
+        <path d="M 0 4 Q 17.5 0, 35 4 T 70 4 T 105 4 T 140 4" fill="none" stroke="var(--accent)" stroke-width="2" />
+      </svg>
+      <% if (section.subtitle) { %>
+        <p class="section-subtitle"><%= section.subtitle %></p>
+      <% } %>
+    </div>
+
+    <!-- Domain Tabs Switcher -->
+    <div class="skill-domain-nav reveal">
+      <% groupedSkills.forEach(function(domain, idx) { %>
+        <button
+          class="tab-btn <%= idx === 0 ? 'active' : '' %>"
+          data-domain="<%= domain.slug %>"
+          type="button"
+        >
+          <% if (domain.slug === 'cs') { %>
+            <%- icon('code', { size: 16 }) %> Software Systems
+          <% } else { %>
+            <%- icon('cpu', { size: 16 }) %> Hardware &amp; Embedded
+          <% } %>
+        </button>
+      <% }); %>
+    </div>
+
+    <!-- Domain Groups -->
+    <% groupedSkills.forEach(function(domain, dIdx) { %>
+      <div
+        class="skills-grid skill-domain-group"
+        data-domain="<%= domain.slug %>"
+        style="<%= dIdx === 0 ? 'display: grid;' : 'display: none; opacity: 0;' %>"
+      >
+        <% domain.categories.forEach(function(cat, cIdx) { %>
+          <div class="skill-category-card reveal stagger-<%= (cIdx % 4) + 1 %>">
+            <h3 class="skill-category-title">
+              <span style="color: var(--accent);"><%- icon(domain.slug === 'cs' ? 'terminal' : 'zap', { size: 16 }) %></span>
+              <%= cat.name %>
+            </h3>
+
+            <div class="skill-items-list">
+              <% cat.skills.forEach(function(skill) { %>
+                <div class="skill-item">
+                  <div class="skill-item-header">
+                    <span class="skill-item-name"><%= skill.name %></span>
+                    <span class="skill-proficiency-val"><%= skill.proficiency %>%</span>
+                  </div>
+
+                  <% if (domain.slug === 'electronics') { %>
+                    <!-- Electronics LED Segment Bar -->
+                    <div class="skill-led-track" data-proficiency="<%= skill.proficiency %>" aria-label="<%= skill.proficiency %>% proficiency">
+                      <div class="skill-led-segment"></div>
+                      <div class="skill-led-segment"></div>
+                      <div class="skill-led-segment"></div>
+                      <div class="skill-led-segment"></div>
+                      <div class="skill-led-segment"></div>
+                      <div class="skill-led-segment"></div>
+                      <div class="skill-led-segment"></div>
+                      <div class="skill-led-segment"></div>
+                      <div class="skill-led-segment"></div>
+                      <div class="skill-led-segment"></div>
+                    </div>
+                  <% } else { %>
+                    <!-- CS Neon Continuous Bar -->
+                    <div class="skill-bar-track" aria-label="<%= skill.proficiency %>% proficiency">
+                      <div class="skill-bar-fill" data-proficiency="<%= skill.proficiency %>"></div>
+                    </div>
+                  <% } %>
+                </div>
+              <% }); %>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% }); %>
+  </div>
+</section>

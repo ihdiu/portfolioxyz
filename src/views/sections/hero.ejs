@@ -1,0 +1,81 @@
+<section id="hero" class="hero-section">
+  <div id="hero-circuit" class="hero-circuit-bg" aria-hidden="true"></div>
+
+  <div class="container hero-content">
+    <div class="hero-text-col">
+      <div class="hero-intro-label reveal stagger-1">
+        <span>&gt;_</span> SYS.BOOT_OK // INITIALIZING BIO INTERFACE
+      </div>
+
+      <h1 class="hero-name reveal stagger-2">
+        <%= profile.full_name %>
+      </h1>
+
+      <div class="hero-terminal-line reveal stagger-3">
+        <span style="color: var(--accent); margin-right: 8px;">&gt;</span>
+        <span id="terminal-typed" data-roles="<%= profile.typed_roles || 'Engineer, Developer' %>">
+          <%= (profile.typed_roles || 'Engineer').split(',')[0].trim() %>
+        </span>
+        <span class="typing-cursor" aria-hidden="true"></span>
+      </div>
+
+      <% if (profile.headline) { %>
+        <p style="font-family: var(--font-mono); font-size: 15px; color: var(--accent); margin-bottom: 12px;" class="reveal stagger-3">
+          // <%= profile.headline %>
+        </p>
+      <% } %>
+
+      <p class="hero-bio reveal stagger-4">
+        <%= profile.bio %>
+      </p>
+
+      <div class="hero-cta-group reveal stagger-5">
+        <a href="#projects" class="btn btn-primary">
+          <%- icon('terminal', { size: 16 }) %> Explore Projects
+        </a>
+        <% if (profile.resume_path) { %>
+          <a href="<%= profile.resume_path %>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+            <%- icon('download', { size: 16 }) %> Download Resume
+          </a>
+        <% } %>
+        <a href="#contact" class="btn btn-accent-2">
+          <%- icon('zap', { size: 16 }) %> Connect Signal
+        </a>
+      </div>
+
+      <div class="hero-meta-strip reveal stagger-6">
+        <% if (profile.location) { %>
+          <div class="hero-meta-item">
+            <span style="color: var(--accent);"><%- icon('map-pin', { size: 16 }) %></span>
+            <span><%= profile.location %></span>
+          </div>
+        <% } %>
+        <% if (profile.email) { %>
+          <div class="hero-meta-item">
+            <span style="color: var(--accent-2);"><%- icon('mail', { size: 16 }) %></span>
+            <span><%= profile.email %></span>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="hero-avatar-wrapper reveal stagger-3">
+      <div class="hero-avatar-card">
+        <% if (profile.avatar_path) { %>
+          <img
+            src="<%= profile.avatar_path %>"
+            alt="<%= profile.full_name %> portrait"
+            class="hero-avatar-img"
+            width="320"
+            height="320"
+            loading="eager"
+          >
+        <% } else { %>
+          <div class="hero-avatar-img" style="display: flex; align-items: center; justify-content: center; font-size: 72px; color: var(--accent);">
+            <%- icon('cpu', { size: 64 }) %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>

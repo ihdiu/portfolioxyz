@@ -1,0 +1,105 @@
+<%- include('partials/header') %>
+
+<div style="margin-bottom: 28px;">
+  <h1 style="font-size: 24px; font-weight: 700; font-family: var(--adm-font-mono); margin-bottom: 6px;">
+    System Status & Overview
+  </h1>
+  <p style="color: var(--adm-text-muted); font-size: 14px;">
+    Manage landing page content, track incoming visitor signals, and tune appearance parameters.
+  </p>
+</div>
+
+<div class="dashboard-grid">
+  <div class="stat-card">
+    <div class="stat-label">Published Projects</div>
+    <div class="stat-value"><%= stats.projects %></div>
+    <div style="margin-top: 12px;">
+      <a href="/admin/projects" class="btn btn-secondary btn-sm">Manage Projects →</a>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Configured Skills</div>
+    <div class="stat-value"><%= stats.skills %></div>
+    <div style="margin-top: 12px;">
+      <a href="/admin/skills" class="btn btn-secondary btn-sm">Manage Skills →</a>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Timeline Roles</div>
+    <div class="stat-value"><%= stats.experiences %></div>
+    <div style="margin-top: 12px;">
+      <a href="/admin/experiences" class="btn btn-secondary btn-sm">Manage Timeline →</a>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Academic Degrees</div>
+    <div class="stat-value"><%= stats.educations %></div>
+    <div style="margin-top: 12px;">
+      <a href="/admin/educations" class="btn btn-secondary btn-sm">Manage Education →</a>
+    </div>
+  </div>
+
+  <div class="stat-card" style="border-color: <%= stats.unreadMessages > 0 ? 'var(--adm-primary)' : 'var(--adm-border)' %>;">
+    <div class="stat-label">Unread Signals</div>
+    <div class="stat-value" style="color: <%= stats.unreadMessages > 0 ? 'var(--adm-secondary)' : 'var(--adm-primary)' %>;">
+      <%= stats.unreadMessages %>
+    </div>
+    <div style="margin-top: 12px;">
+      <a href="/admin/messages" class="btn btn-secondary btn-sm">Open Inbox →</a>
+    </div>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px;">
+  <div class="form-card" style="max-width: 100%;">
+    <h3 style="font-size: 16px; font-family: var(--adm-font-mono); color: var(--adm-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+      <%- icon('zap', { size: 16 }) %> Quick Actions
+    </h3>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <a href="/admin/projects/new" class="btn btn-primary" style="justify-content: flex-start; display: inline-flex; align-items: center; gap: 8px;">
+        <%- icon('plus', { size: 14 }) %> Deploy New Project
+      </a>
+      <a href="/admin/skills/new" class="btn btn-secondary" style="justify-content: flex-start; display: inline-flex; align-items: center; gap: 8px;">
+        <%- icon('plus', { size: 14 }) %> Calibrate New Skill
+      </a>
+      <a href="/admin/sections" class="btn btn-secondary" style="justify-content: flex-start; display: inline-flex; align-items: center; gap: 8px;">
+        <%- icon('sliders', { size: 14 }) %> Reorder Landing Page Sections
+      </a>
+      <a href="/admin/settings" class="btn btn-secondary" style="justify-content: flex-start; display: inline-flex; align-items: center; gap: 8px;">
+        <%- icon('sparkles', { size: 14 }) %> Adjust Accent Colors & Theme
+      </a>
+      <a href="/admin/career" class="btn btn-secondary" style="justify-content: flex-start; display: inline-flex; align-items: center; gap: 8px;">
+        <%- icon('git-branch', { size: 14 }) %> Edit Career Trajectory Tree
+      </a>
+    </div>
+  </div>
+
+  <div class="form-card" style="max-width: 100%;">
+    <h3 style="font-size: 16px; font-family: var(--adm-font-mono); color: var(--adm-secondary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+      <%- icon('shield', { size: 16 }) %> Core System Integrity
+    </h3>
+    <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
+      <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--adm-border); padding-bottom: 8px;">
+        <span style="color: var(--adm-text-muted);">Database:</span>
+        <strong style="color: var(--adm-success);">MySQL 8 (3NF Schema)</strong>
+      </li>
+      <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--adm-border); padding-bottom: 8px;">
+        <span style="color: var(--adm-text-muted);">Session Engine:</span>
+        <span>express-mysql-session</span>
+      </li>
+      <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--adm-border); padding-bottom: 8px;">
+        <span style="color: var(--adm-text-muted);">CSRF Guard:</span>
+        <strong style="color: var(--adm-success);">Active (double-submit)</strong>
+      </li>
+      <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--adm-border); padding-bottom: 8px;">
+        <span style="color: var(--adm-text-muted);">Image Processing:</span>
+        <span>sharp WebP engine</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
